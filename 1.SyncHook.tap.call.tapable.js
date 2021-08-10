@@ -1,5 +1,5 @@
 // 同步钩子
-class SyncWaterfallHook {
+class SyncLoopHook {
   constructor(args) {
     // args: ['name']
     this.tasks = [];
@@ -8,9 +8,12 @@ class SyncWaterfallHook {
     this.tasks.push(task);
   }
   call(...args) {
-    const [first, ...others] = this.tasks;
-    let ret = first(...args);
-    others.reduce((a, b) => b(a), ret);
+    this.tasks.forEach((task) => {
+      let ret;
+      do {
+        ret = task(...args);
+      } while (ret !== undefined);
+    });
   }
 }
-module.exports = { SyncWaterfallHook };
+module.exports = { SyncLoopHook };
