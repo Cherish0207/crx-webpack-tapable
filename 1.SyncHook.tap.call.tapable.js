@@ -1,5 +1,5 @@
 // 同步钩子
-class SyncHook {
+class SyncBailHook {
   constructor(args) {
     // args: ['name']
     this.tasks = [];
@@ -8,7 +8,11 @@ class SyncHook {
     this.tasks.push(task);
   }
   call(...args) {
-    this.tasks.forEach((task) => task(...args));
+    let index = 0,
+      ret;
+    do {
+      ret = this.tasks[index++](...args);
+    } while (ret === undefined && index < this.tasks.length);
   }
 }
-module.exports = { SyncHook };
+module.exports = { SyncBailHook };
