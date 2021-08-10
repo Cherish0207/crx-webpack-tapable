@@ -16,3 +16,27 @@ Tapable 有点类似于 nodejs 的 events 库,核心原理也是依赖于发布�
 
 `主核心模块node_modules/webpack/lib/Compiler.js`
 ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/30efb652a35848eaa106e3f9a4a2d399~tplv-k3u1fbpfcp-watermark.image)
+
+## 2. tapable 分类
+
+### 2.1 按同步异步分类
+
+Hook 类型可以分为同步`Sync`和异步`Async`，异步又分为`并行`和`串行`
+![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f7d944c5f6642e59a03fbc0a17d6c7a~tplv-k3u1fbpfcp-watermark.image)
+
+- 异步:同时发送多个请求\
+  异步的钩子分为两种:
+  - 串行:
+  - 并行:需要等待所有并发的异步事件执行后在执行回调方法(并行性能更好)
+
+```
+tapable 库有
+三种注册方法
+- tap 同步注册,
+- tapAsync 异步注册,cb
+- tapPromise 注册是 promise
+三种调用方法
+- call
+- callAsync
+- promise
+```
