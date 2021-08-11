@@ -31,12 +31,22 @@ Hook 类型可以分为同步`Sync`和异步`Async`，异步又分为`并行`和
 
 ```
 tapable 库有
-三种注册方法
-- tap 同步注册,
-- tapAsync 异步注册,cb
-- tapPromise 注册是 promise
-三种调用方法
-- call
-- callAsync
-- promise
+  三种注册方法
+    - tap 同步注册,
+    - tapAsync 异步注册,cb
+    - tapPromise 注册是 promise
+  三种调用方法
+    - call
+    - callAsync
+    - promise
 ```
+
+### 2.2 按返回值分类
+- Basic: 执行每一个事件函数，不关心函数的返回值,有 SyncHook、AsyncParallelHook、AsyncSeriesHook
+-  Bail: 执行每一个事件函数，遇到第一个结果 result !== undefined 则返回，不再继续执行。有：SyncBailHook、AsyncSeriesBailHook, AsyncParallelBailHook
+- Waterfall: 如果前一个事件函数的结果 result !== undefined,则 result 会作为后一个事件函数的第一个参数,有SyncWaterfallHook，AsyncSeriesWaterfallHook
+- Loop: 不停的循环执行事件函数，直到所有函数结果 result === undefined,有SyncLoopHook 和 AsyncSeriesLoopHook
+
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2fa281601bae4bfd8742ae5af4e38f19~tplv-k3u1fbpfcp-watermark.image)
+
+![按返回值分类.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/da5bdd22b607437b9ebf8a81ce218801~tplv-k3u1fbpfcp-watermark.image)
