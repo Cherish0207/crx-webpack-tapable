@@ -21,6 +21,10 @@ class AsyncSeriesHook {
     next();
   }
   promise(...args) {
+    let [first, ...others] = this.tasks;
+    others.reduce((p, n) => {
+      return p.then(() => n(...args));
+    }, first(...args));
     return Promise.all(this.tasks.map((task) => task(...args)));
   }
 }
