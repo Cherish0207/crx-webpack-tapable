@@ -1,35 +1,33 @@
 // AsyncParallelHook异步并行钩子
-// let { AsyncParallelHook } = require("tapable");
-let { AsyncParallelHook } = require("./2.AyncHook.tapable");
+// AsyncSeriesHook异步串行钩子
+let { AsyncSeriesHook } = require("tapable");
+// let { AsyncSeriesHook } = require("./2.AyncHook.tapable");
 class Study {
   constructor() {
     this.index = 0;
     this.hooks = {
-      arch: new AsyncParallelHook(["name"]),
+      arch: new AsyncSeriesHook(["name"]),
     };
   }
   // 注册监听函数
   tap() {
     // 第一个参数没有实际意义,方便开发者阅读
-    this.hooks.arch.tapPromise("webpack", (name) => {
-      return new Promise((resolve, reject) => {
+    this.hooks.arch.tapAsync("webpack", (name, cb) => {
+      console.log(1);
+      setTimeout(() => {
         console.log(name, "webpack");
-        setTimeout(() => {
-          resolve();
-        }, 1000);
-      });
+        cb();
+      }, 1000);
     });
-    this.hooks.arch.tapPromise("算法", (name) => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          console.log(name, "算法");
-          resolve();
-        }, 1000);
-      });
+    this.hooks.arch.tapAsync("算法", (name, cb) => {
+      setTimeout(() => {
+        console.log(name, "算法");
+        cb();
+      }, 1000);
     });
   }
   start() {
-    this.hooks.arch.promise("cherish").then(() => {
+    this.hooks.arch.callAsync("cherish", () => {
       console.log("end");
     });
   }

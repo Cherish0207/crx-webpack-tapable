@@ -1,5 +1,5 @@
 // 同步钩子
-class AsyncParallelHook {
+class AsyncSeriesHook {
   constructor(args) {
     // args: ['name']
     this.tasks = [];
@@ -13,19 +13,15 @@ class AsyncParallelHook {
   callAsync(...args) {
     let finalCalllback = args.pop(); // 取最后一个回调函数参数
     let index = 0;
-    let done = () => {
-      // Promise.all
-      index++;
-      if (index === this.tasks.length) {
-        finalCalllback();
-      }
+    let next = () => {
+      if (this.tasks.length === index) return finalCalllback();
+      let task = this.tasks[index++];
+      task(...args, next);
     };
-    this.tasks.forEach((task) => {
-      task(...args, done);
-    });
+    next();
   }
   promise(...args) {
     return Promise.all(this.tasks.map((task) => task(...args)));
   }
 }
-module.exports = { AsyncParallelHook };
+module.exports = { AsyncSeriesHook };
