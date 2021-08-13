@@ -1,5 +1,6 @@
 // 同步钩子
-class AsyncSeriesHook {
+// AsyncSeriesWaterfallHook 异步串行瀑布
+class AsyncSeriesWaterfallHook {
   constructor(args) {
     // args: ['name']
     this.tasks = [];
@@ -13,10 +14,15 @@ class AsyncSeriesHook {
   callAsync(...args) {
     let finalCalllback = args.pop(); // 取最后一个回调函数参数
     let index = 0;
-    let next = () => {
-      if (this.tasks.length === index) return finalCalllback();
-      let task = this.tasks[index++];
-      task(...args, next);
+    let next = (err, data) => {
+      let task = this.tasks[index];
+      if (!task) return finalCalllback();
+      if (index === 0) {
+        task(...args, next);
+      } else {
+        task(data, next);
+      }
+      index++;
     };
     next();
   }
@@ -28,4 +34,4 @@ class AsyncSeriesHook {
     return Promise.all(this.tasks.map((task) => task(...args)));
   }
 }
-module.exports = { AsyncSeriesHook };
+module.exports = { AsyncSeriesWaterfallHook };
